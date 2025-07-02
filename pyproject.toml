@@ -13,6 +13,8 @@ pydantic-settings = "^2.10.1"
 asyncpg = "^0.30.0"
 alembic = "^1.16.2"
 dishka = "^1.6.0"
+pytest = "^8.4.1"
+httpx = "^0.28.1"
 
 
 [tool.poetry.group.dev.dependencies]
