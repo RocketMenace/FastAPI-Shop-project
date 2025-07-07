@@ -15,6 +15,5 @@ class Batch(BaseModel):
         return self.available_quantity
 
 
-if __name__ == "__main__":
-    batch = Batch(reference="q", sku="q", available_quantity=4)
-    print(batch)
+    def can_allocate(self, line: OrderLine) -> bool:
+        return self.sku == line.sku and self.available_quantity >= line.qty

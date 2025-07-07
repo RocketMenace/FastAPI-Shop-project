@@ -7,4 +7,5 @@ from pytest import FixtureRequest
 def make_order(request: FixtureRequest):
     args = {**request.param}
     batch, order = make_batch_and_line(**args)
+    print(batch, '&&&&&&&&&&&&&&&&&&&')
     return batch, order
