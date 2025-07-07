@@ -1,4 +1,5 @@
 import pytest
+
 from tests.conftest import make_order
 from app.schemas.batch import Batch
 from app.schemas.order_line import OrderLine
@@ -38,8 +39,9 @@ def test_cannot_allocate_if_skus_do_not_match():
     batch = Batch(
         reference="batch-001",
         sku="UNCOMFORTABLE-CHAIR",
-        available_quantity=100,
+        purchased_quantity=100,
         eta=None,
+        allocations=set(),
     )
     line = OrderLine(order_id=4, sku="EXPENSIVE-TOASTER", qty=10)
     assert batch.can_allocate(line) is False
@@ -54,3 +56,15 @@ def test_can_only_deallocate_allocated_lines(make_order):
     batch, unallocated_line = make_order
     batch.deallocate(unallocated_line)
     assert batch.available_quantity == 20
+
+
+@pytest.mark.parametrize(
+    "make_order",
+    [{"sku": "ANGULAR-DESK", "order_id": 3, "batch_qty": 20, "line_qty": 2}],
+    indirect=True,
+)
+def test_allocations_is_idempotent(make_order):
+    batch, line = make_order
+    batch.allocate(line)
+    batch.allocate(line)
+    assert batch.available_quantity == 18
