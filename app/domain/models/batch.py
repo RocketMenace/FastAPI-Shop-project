@@ -1,15 +1,16 @@
-from pydantic import BaseModel, Field, computed_field
+from dataclasses import dataclass
 from typing import Optional, Set
 from datetime import date
-from app.schemas.order_line import OrderLine
+from .order_line import OrderLine
 
 
-class Batch(BaseModel):
-    reference: str = Field(default=..., title="reference")
-    sku: str = Field(default=..., title="sku")
-    eta: Optional[date] = Field(default=..., title="eta")
-    purchased_quantity: int = Field(default=..., title="purchased_quantity")
-    allocations: Set[OrderLine] = Field(default=..., title="allocations")
+@dataclass(frozen=True)
+class Batch:
+    reference: str
+    sku: str
+    eta: Optional[date]
+    purchased_quantity: int
+    allocations: Set[OrderLine]
 
     def allocate(self, line: OrderLine) -> None:
         if self.can_allocate(line):
@@ -19,12 +20,10 @@ class Batch(BaseModel):
         if line in self.allocations:
             self.allocations.remove(line)
 
-    @computed_field
     @property
     def allocated_quantity(self) -> int:
         return sum(line.qty for line in self.allocations)
 
-    @computed_field
     @property
     def available_quantity(self) -> int:
         return self.purchased_quantity - self.allocated_quantity

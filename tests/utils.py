@@ -1,5 +1,5 @@
-from app.schemas.batch import Batch
-from app.schemas.order_line import OrderLine
+from app.domain.models.batch import Batch
+from app.domain.models.order_line import OrderLine
 from datetime import date
 
 
