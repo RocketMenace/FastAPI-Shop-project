@@ -15,7 +15,8 @@ def test_can_allocate_if_available_smaller_than_required(make_order):
 
 @pytest.mark.parametrize(
     "make_order",
-    [{"sku": "ELEGANT-LAMP", "order_id": 1, "batch_qty": 2, "line_qty": 20}]
+    [{"sku": "ELEGANT-LAMP", "order_id": 1, "batch_qty": 2, "line_qty": 20}],
+    indirect=True
 )
 def test_cannot_allocate_if_available_less_than_required(make_order):
     small_batch, large_line = make_order
@@ -23,7 +24,8 @@ def test_cannot_allocate_if_available_less_than_required(make_order):
 
 @pytest.mark.parametrize(
     "make_order",
-    [{"sku":"ELEGANT-LAMP", "order_id": 1, "batch_qty": 2, "line_qty": 2}]
+    [{"sku":"ELEGANT-LAMP", "order_id": 1, "batch_qty": 2, "line_qty": 2}],
+    indirect=True
 )
 def test_can_allocate_if_available_equal_required(make_order):
     batch, line = make_order
